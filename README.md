@@ -16,6 +16,9 @@ macOS・Windows向け（どちらもMicrosoft Wordのインストールが必要
     uv run main.py -i ./data/{適当な名前}/
     ```
 3. `./out.pdf`が作成される
+    - 並び順は提出者フォルダ名の自然順（`student2`が`student10`より前）
+    - pdfのしおり（目次）に「提出者 - ファイル名」が入るので、目的の提出物へ飛べる
+    - 変換できないファイルがあっても残りは結合し、最後に失敗した一覧を出す
 
 OSごとの依存（macOSは`appscript`、Windowsは`pywin32`）は`uv.lock`に記録されており、`uv sync`が自動で選ぶ。
 
@@ -24,17 +27,19 @@ OSごとの依存（macOSは`appscript`、Windowsは`pywin32`）は`uv.lock`に�
 ```
 uv run main.py -h
 
-usage: main.py [-h] -i INPUT_DIR [-o OUTPUT_FILE] [-d]
+usage: main.py [-h] -i INPUT_DIR [-o OUTPUT_FILE] [-k DIR]
 
 options:
   -h, --help            show this help message and exit
   -i INPUT_DIR, --input-dir INPUT_DIR
-                        一括ダウンロードしたdocxファイルを配置したディレクトリ
+                        一括ダウンロードしたフォルダ（{提出者}/{ファイル}.docx の形）
   -o OUTPUT_FILE, --output-file OUTPUT_FILE
-                        結合したpdfを出力するファイル
-  -d, --delete-tmp-files
-                        中間ファイルを削除するかどうか
+                        結合したpdfを出力するファイル（既定: ./out.pdf）
+  -k DIR, --keep-pdfs DIR
+                        変換した個別のpdfをこのフォルダに残す（既定では残さない）
 ```
+
+中間ファイルはOSの一時フォルダに作られ、終了時に消える（入力フォルダには何も作らない）。
 
 ## デモ
 
