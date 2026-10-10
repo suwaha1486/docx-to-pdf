@@ -1,33 +1,37 @@
 # docxファイルをpdf化し、結合して一つのpdfにするやつ
 
-```
-> python3 --version
-Python 3.10.4
-```
+macOS・Windows向け（どちらもMicrosoft Wordのインストールが必要）。uvでの手順はWindows 11で動作確認済み、macOSでは未確認。
+
+## 必要なもの
+
+- Microsoft Word（変換はWordが行う）
+- [uv](https://docs.astral.sh/uv/)（Pythonの本体と依存パッケージはuvが用意する）
+
+## 使い方
 
 1. `./data/{適当な名前}/`に一括ダウンロードしたフォルダ（解凍済み）を配置
-2. 以下をターミナルで実行（途中でアクセス許可が求められることがある）
+2. 以下をターミナルで実行（途中でWordへのアクセス許可が求められることがある）
     ```
-    python -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    python main.py -i ./data/{適当な名前}/
+    uv sync
+    uv run main.py -i ./data/{適当な名前}/
     ```
 3. `./out.pdf`が作成される
+
+OSごとの依存（macOSは`appscript`、Windowsは`pywin32`）は`uv.lock`に記録されており、`uv sync`が自動で選ぶ。
 
 ## 設定
 
 ```
-python main.py -h
+uv run main.py -h
 
-usage: main.py [-h] -i INPUT_DIR [-o OUTPUT_DIR] [-d]
+usage: main.py [-h] -i INPUT_DIR [-o OUTPUT_FILE] [-d]
 
 options:
   -h, --help            show this help message and exit
   -i INPUT_DIR, --input-dir INPUT_DIR
-                        一括ダウンロードしたpdfファイルを配置したディレクトリ
-  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        結合したpdfを出力するディレクトリ
+                        一括ダウンロードしたdocxファイルを配置したディレクトリ
+  -o OUTPUT_FILE, --output-file OUTPUT_FILE
+                        結合したpdfを出力するファイル
   -d, --delete-tmp-files
                         中間ファイルを削除するかどうか
 ```
@@ -35,12 +39,12 @@ options:
 ## デモ
 
 ```
-python main.py -i ./demo/
+uv run main.py -i ./demo/
 ```
 
 ## 不具合メモ
 
-- zipファイルが解凍できない場合
+- zipファイルが解凍できない場合（macOS・Linux）
 - 以下のコマンドを実行すると治るかも
 
 ```
